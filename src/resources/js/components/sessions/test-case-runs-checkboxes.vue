@@ -11,6 +11,7 @@
                         type="button"
                         class="dropdown-toggle btn btn-link d-inline-block text-reset p-0 my-2"
                         v-b-toggle="`use-case-${useCase.id}`"
+                        style="font-weight: 1000"
                     >
                         {{ useCase.name }}
                     </button>
@@ -133,8 +134,8 @@
                                                 type="button"
                                                 class="dropdown-toggle btn btn-link d-inline-block text-reset p-0 my-2"
                                                 v-b-toggle="
-                                                `positive-test-cases-test-runs-${testCase.id}`
-                                            "
+                                                    `positive-test-cases-test-runs-${testCase.id}`
+                                                "
                                             >
                                                 {{ testCase.name }}
                                             </button>
@@ -142,9 +143,7 @@
                                                 type="button"
                                                 class="btn btn-link p-0 ml-3"
                                                 @click.prevent="
-                                                    toggleCbxList(
-                                                        [testCase]
-                                                    )
+                                                    toggleCbxList([testCase])
                                                 "
                                             >
                                                 <icon
@@ -183,11 +182,15 @@
                                         >
                                             <ul class="list-group">
                                                 <li
-                                                    v-for="(testRun, j) in testCase.testRuns"
+                                                    v-for="(
+                                                        testRun, j
+                                                    ) in testCase.testRuns"
                                                     class="list-group-item"
                                                     :key="`${useCase.id}-${testCase.id}-${i}-${testRun.id}-${j}`"
                                                 >
-                                                    <label class="form-check mb-0">
+                                                    <label
+                                                        class="form-check mb-0"
+                                                    >
                                                         <input
                                                             :checked="
                                                                 testRuns.includes(
@@ -205,17 +208,25 @@
                                                                 )
                                                             "
                                                         />
-                                                        <span class="form-check-label align-items-center">
-                                                            #Run {{ testRun.id }} - {{ testRun.completed_at }}
+                                                        <span
+                                                            class="form-check-label align-items-center"
+                                                        >
+                                                            #Run
+                                                            {{ testRun.id }} -
+                                                            {{
+                                                                testRun.completed_at
+                                                            }}
                                                         </span>
                                                         <span
                                                             v-if="
-                                                                    testRun.completed_at &&
-                                                                    testRun.successful
-                                                                "
+                                                                testRun.completed_at &&
+                                                                testRun.successful
+                                                            "
                                                             class="d-inline-flex flex-shrink-0 align-items-center"
                                                         >
-                                                            <span class="badge bg-success mr-2"></span>
+                                                            <span
+                                                                class="badge bg-success mr-2"
+                                                            ></span>
                                                             Pass
                                                         </span>
                                                         <span
@@ -225,14 +236,18 @@
                                                             "
                                                             class="d-inline-flex flex-shrink-0 align-items-center"
                                                         >
-                                                            <span class="badge bg-danger mr-2"></span>
+                                                            <span
+                                                                class="badge bg-danger mr-2"
+                                                            ></span>
                                                             Fail
                                                         </span>
                                                         <span
                                                             v-else
                                                             class="d-inline-flex flex-shrink-0 align-items-center"
                                                         >
-                                                            <span class="badge bg-secondary mr-2"></span>
+                                                            <span
+                                                                class="badge bg-secondary mr-2"
+                                                            ></span>
                                                             Incomplete
                                                         </span>
                                                     </label>
@@ -310,14 +325,13 @@
                                         class="list-group-item"
                                         :key="`${useCase.id}-${testCase.id}-${i}`"
                                     >
-
                                         <div class="d-flex align-items-center">
                                             <button
                                                 type="button"
                                                 class="dropdown-toggle btn btn-link d-inline-block text-reset p-0 my-2"
                                                 v-b-toggle="
-                                                `negative-test-cases-test-runs-${testCase.id}`
-                                            "
+                                                    `negative-test-cases-test-runs-${testCase.id}`
+                                                "
                                             >
                                                 {{ testCase.name }}
                                             </button>
@@ -325,9 +339,7 @@
                                                 type="button"
                                                 class="btn btn-link p-0 ml-3"
                                                 @click.prevent="
-                                                    toggleCbxList(
-                                                        [testCase]
-                                                    )
+                                                    toggleCbxList([testCase])
                                                 "
                                             >
                                                 <icon
@@ -365,11 +377,15 @@
                                         >
                                             <ul class="list-group">
                                                 <li
-                                                    v-for="(testRun, j) in testCase.testRuns"
+                                                    v-for="(
+                                                        testRun, j
+                                                    ) in testCase.testRuns"
                                                     class="list-group-item"
                                                     :key="`${useCase.id}-${testCase.id}-${i}-${testRun.id}-${j}`"
                                                 >
-                                                    <label class="form-check mb-0">
+                                                    <label
+                                                        class="form-check mb-0"
+                                                    >
                                                         <input
                                                             :checked="
                                                                 testRuns.includes(
@@ -387,17 +403,25 @@
                                                                 )
                                                             "
                                                         />
-                                                        <span class="form-check-label align-items-center">
-                                                            #Run {{ testRun.id }} - {{ testRun.completed_at }}
+                                                        <span
+                                                            class="form-check-label align-items-center"
+                                                        >
+                                                            #Run
+                                                            {{ testRun.id }} -
+                                                            {{
+                                                                testRun.completed_at
+                                                            }}
                                                         </span>
                                                         <span
                                                             v-if="
-                                                                    testRun.completed_at &&
-                                                                    testRun.successful
-                                                                "
+                                                                testRun.completed_at &&
+                                                                testRun.successful
+                                                            "
                                                             class="d-inline-flex flex-shrink-0 align-items-center"
                                                         >
-                                                            <span class="badge bg-success mr-2"></span>
+                                                            <span
+                                                                class="badge bg-success mr-2"
+                                                            ></span>
                                                             Pass
                                                         </span>
                                                         <span
@@ -407,14 +431,18 @@
                                                             "
                                                             class="d-inline-flex flex-shrink-0 align-items-center"
                                                         >
-                                                            <span class="badge bg-danger mr-2"></span>
+                                                            <span
+                                                                class="badge bg-danger mr-2"
+                                                            ></span>
                                                             Fail
                                                         </span>
                                                         <span
                                                             v-else
                                                             class="d-inline-flex flex-shrink-0 align-items-center"
                                                         >
-                                                            <span class="badge bg-secondary mr-2"></span>
+                                                            <span
+                                                                class="badge bg-secondary mr-2"
+                                                            ></span>
                                                             Incomplete
                                                         </span>
                                                     </label>
@@ -432,102 +460,109 @@
     </div>
 </template>
 <script>
-
-export default {
-    name: 'testCaseRunsCheckboxes',
-    props: {
-        value: {
-            type: Array,
-            required: false,
-        },
-        session: {
-            type: Object,
-            required: true,
-        },
-        useCases: {
-            type: Object,
-            required: true,
-        },
-        isCompliance: {
-            type: Boolean,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            testRuns: [],
-            sortUseCases: this.updateSortUseCases(),
-        };
-    },
-    watch: {
-        testRuns: {
-            immediate: true,
-            handler() {
-                this.$emit('input', this.testRuns);
+    export default {
+        name: 'testCaseRunsCheckboxes',
+        props: {
+            value: {
+                type: Array,
+                required: false,
+            },
+            session: {
+                type: Object,
+                required: true,
+            },
+            useCases: {
+                type: Object,
+                required: true,
+            },
+            scenarios: {
+                type: Object,
+                required: true,
+            },
+            isCompliance: {
+                type: Boolean,
+                required: true,
             },
         },
-    },
-    methods: {
-        toggleCbxList(tcList) {
-            const tcIdList = [];
-            tcList?.forEach((testCase) => {
-                testCase.testRuns?.forEach((testRun) => {
-                    tcIdList.push(testRun.id);
-                })
-            });
-            const isAllChecked =
-                tcIdList?.filter((id) => this.testRuns.includes(id)).length ===
-                tcIdList.length;
-            tcIdList?.forEach((id) => this.toggleCbx(id, isAllChecked));
+        data() {
+            return {
+                testRuns: [],
+                sortUseCases: this.updateSortUseCases(),
+            };
         },
-        toggleCbx(tcId, remove) {
-            if (remove && this.testRuns.includes(tcId)) {
-                this.testRuns.splice(this.testRuns.indexOf(tcId), 1);
-            } else if (!remove && !this.testRuns.includes(tcId)) {
-                this.testRuns.push(tcId);
-            }
+        watch: {
+            testRuns: {
+                immediate: true,
+                handler() {
+                    this.$emit('input', this.testRuns);
+                },
+            },
         },
-        checkCbxList(customList, mainList) {
-            const testRuns = [];
-            customList?.forEach((testCase) => testCase.testRuns?.forEach((testRun) => testRuns.push(testRun)));
-            const mainListLength = testRuns?.filter((el) =>
-                mainList.includes(el.id)
-            ).length;
-            const customListLength = testRuns.length;
-
-            if (mainListLength === 0) return 'empty';
-
-            if (mainListLength > 0 && mainListLength !== customListLength)
-                return 'partial';
-
-            if (mainListLength === customListLength) return 'full';
-        },
-        updateSortUseCases() {
-            return this.useCases.data?.map((useCase) => {
-                const sortUseCase = {
-                    can: useCase.can,
-                    description: useCase.description,
-                    id: useCase.id,
-                    name: useCase.name,
-                    testCasesCount: useCase.testCasesCount,
-                    testCases: {
-                        positive: [],
-                        negative: [],
-                    },
-                };
-
-                useCase.testCases?.forEach((testCase) => {
-                    if (testCase.behavior === 'positive') {
-                        sortUseCase.testCases.positive.push(testCase);
-                    }
-                    if (testCase.behavior === 'negative') {
-                        sortUseCase.testCases.negative.push(testCase);
-                    }
+        methods: {
+            toggleCbxList(tcList) {
+                const tcIdList = [];
+                tcList?.forEach((testCase) => {
+                    testCase.testRuns?.forEach((testRun) => {
+                        tcIdList.push(testRun.id);
+                    });
                 });
+                const isAllChecked =
+                    tcIdList?.filter((id) => this.testRuns.includes(id))
+                        .length === tcIdList.length;
+                tcIdList?.forEach((id) => this.toggleCbx(id, isAllChecked));
+            },
+            toggleCbx(tcId, remove) {
+                if (remove && this.testRuns.includes(tcId)) {
+                    this.testRuns.splice(this.testRuns.indexOf(tcId), 1);
+                } else if (!remove && !this.testRuns.includes(tcId)) {
+                    this.testRuns.push(tcId);
+                }
+            },
+            checkCbxList(customList, mainList) {
+                const testRuns = [];
+                customList?.forEach((testCase) =>
+                    testCase.testRuns?.forEach((testRun) =>
+                        testRuns.push(testRun)
+                    )
+                );
+                const mainListLength = testRuns?.filter((el) =>
+                    mainList.includes(el.id)
+                ).length;
+                const customListLength = testRuns.length;
 
-                return sortUseCase;
-            });
+                if (mainListLength === 0) return 'empty';
+
+                if (mainListLength > 0 && mainListLength !== customListLength)
+                    return 'partial';
+
+                if (mainListLength === customListLength) return 'full';
+            },
+            updateSortUseCases() {
+                return this.useCases.data?.map((useCase) => {
+                    const sortUseCase = {
+                        can: useCase.can,
+                        description: useCase.description,
+                        id: useCase.id,
+                        name: useCase.name,
+                        testCasesCount: useCase.testCasesCount,
+                        testCases: {
+                            positive: [],
+                            negative: [],
+                        },
+                    };
+
+                    useCase.testCases?.forEach((testCase) => {
+                        if (testCase.behavior === 'positive') {
+                            sortUseCase.testCases.positive.push(testCase);
+                        }
+                        if (testCase.behavior === 'negative') {
+                            sortUseCase.testCases.negative.push(testCase);
+                        }
+                    });
+
+                    return sortUseCase;
+                });
+            },
         },
-    },
-};
+    };
 </script>

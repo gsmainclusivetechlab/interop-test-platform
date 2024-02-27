@@ -30,6 +30,12 @@
                         }}</label>
                         <div>{{ useCase }}</div>
                     </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">{{
+                            $t('inputs.scenario.label')
+                        }}</label>
+                        <div>{{ scenario }}</div>
+                    </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">{{
                             $t('inputs.precondition.label')
@@ -68,35 +74,36 @@
 </template>
 
 <script>
-import Layout from '@/layouts/test-cases/main';
+    import Layout from '@/layouts/test-cases/main';
 
-export default {
-    metaInfo() {
-        return {
-            title: `${this.testCase.name} - ${this.$t('card.title')}`,
-        };
-    },
-    components: {
-        Layout,
-    },
-    props: {
-        testCase: {
-            type: Object,
-            required: true,
+    export default {
+        metaInfo() {
+            return {
+                title: `${this.testCase.name} - ${this.$t('card.title')}`,
+            };
         },
-    },
-    data() {
-        return {
-            name: this.testCase.name,
-            slug: this.testCase.slug,
-            behavior: collect(this.$page.props.enums.test_case_behaviors).get(
-                this.testCase.behavior
-            ),
-            useCase: this.testCase.useCase.data.name,
-            description: this.testCase.description,
-            precondition: this.testCase.precondition,
-        };
-    },
-};
+        components: {
+            Layout,
+        },
+        props: {
+            testCase: {
+                type: Object,
+                required: true,
+            },
+        },
+        data() {
+            return {
+                name: this.testCase.name,
+                slug: this.testCase.slug,
+                behavior: collect(
+                    this.$page.props.enums.test_case_behaviors
+                ).get(this.testCase.behavior),
+                useCase: this.testCase.useCase.data.name,
+                scenario: this.testCase.scenario.data.name,
+                description: this.testCase.description,
+                precondition: this.testCase.precondition,
+            };
+        },
+    };
 </script>
 <i18n src="@locales/pages/admin/test-cases/info/show.json"></i18n>

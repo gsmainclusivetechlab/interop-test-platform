@@ -8,10 +8,11 @@ use App\Http\Resources\{
     GroupResource,
     TestCaseResource,
     TestStepResource,
-    UseCaseResource
+    UseCaseResource,
+    ScenarioResource
 };
 use App\Imports\TestCaseImport;
-use App\Models\{Component, Group, TestCase, TestStep, UseCase};
+use App\Models\{Component, Group, TestCase, TestStep, UseCase, Scenario};
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -52,7 +53,13 @@ class TestCaseController extends Controller
                     $query->where('test_cases.name', 'like', "%{$q}%");
                 })
                     ->lastPerGroup()
-                    ->with(['owner', 'groups', 'useCase', 'testSteps'])
+                    ->with([
+                        'owner',
+                        'groups',
+                        'useCase',
+                        'scenario',
+                        'testSteps',
+                    ])
                     ->when(
                         !auth()
                             ->user()
@@ -91,6 +98,9 @@ class TestCaseController extends Controller
             'useCases' => UseCaseResource::collection(
                 UseCase::get()
             )->resolve(),
+            'scenarios' => ScenarioResource::collection(
+                Scenario::get()
+            )->resolve(),
         ]);
     }
 
@@ -116,6 +126,7 @@ class TestCaseController extends Controller
             ],
             'slug' => ['required', Rule::unique('test_cases')],
             'use_case_id' => ['required', 'integer', 'exists:use_cases,id'],
+            'scenario_id' => ['required', 'integer', 'exists:scenarios,id'],
             'groups_id.*' => ['integer', 'exists:groups,id'],
             'components_id.*' => ['integer', 'exists:components,id'],
         ]);

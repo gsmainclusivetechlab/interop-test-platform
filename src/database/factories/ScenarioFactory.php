@@ -3,7 +3,6 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\Scenario;
-use App\Models\TestCase;
 use App\Models\UseCase;
 use Faker\Generator as Faker;
 
@@ -18,25 +17,14 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(TestCase::class, function (Faker $faker) {
+$factory->define(Scenario::class, function (Faker $faker) {
     return [
+        'name' => $faker->text,
+        'description' => $faker->text,
         'use_case_id' => function () {
             return factory(UseCase::class)
                 ->create()
                 ->getKey();
         },
-        'scenario_id' => function () {
-            return factory(Scenario::class)
-                ->create()
-                ->getKey();
-        },
-        'name' => $faker->text,
-        'slug' => $faker->slug,
-        'behavior' => $faker->randomElement([
-            TestCase::BEHAVIOR_POSITIVE,
-            TestCase::BEHAVIOR_NEGATIVE,
-        ]),
-        'description' => $faker->text,
-        'precondition' => $faker->text,
     ];
 });

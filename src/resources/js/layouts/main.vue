@@ -150,6 +150,18 @@
                             </li>
                             <li
                                 v-if="
+                                    $page.props.auth.user.can.scenarios.viewAny
+                                "
+                            >
+                                <inertia-link
+                                    :href="route('admin.scenarios.index')"
+                                    class="text-reset dropdown-item"
+                                >
+                                    {{ $t('layout.main.menu.scenarios') }}
+                                </inertia-link>
+                            </li>
+                            <li
+                                v-if="
                                     $page.props.auth.user.can.test_cases.viewAny
                                 "
                             >

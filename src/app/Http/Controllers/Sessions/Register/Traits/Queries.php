@@ -21,8 +21,12 @@ trait Queries
     protected function getUseCases()
     {
         return UseCase::with([
-            'testCases' => function ($query) {
-                $this->getTestCasesQuery($query);
+            'scenarios' => function ($query) {
+                $query->with([
+                    'testCases' => function ($query) {
+                        $this->getTestCasesQuery($query);
+                    },
+                ]);
             },
         ])
             ->whereHas('testCases', function ($query) {

@@ -74,6 +74,7 @@ class TestCaseExport implements Exportable
             'name' => $testCase->name,
             'slug' => $testCase->slug,
             'use_case' => $testCase->useCase->name,
+            'scenario' => $testCase->scenario->name,
             'behavior' => $testCase->behavior,
             'description' => $testCase->description,
             'precondition' => $testCase->precondition,

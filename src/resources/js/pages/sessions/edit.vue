@@ -398,7 +398,13 @@
                                     }}</strong>
                                 </div>
                             </div>
-                            <div class="mb-3" v-if="simulatorPluginsList && $page.props.app.enable_simulator_plugin">
+                            <div
+                                class="mb-3"
+                                v-if="
+                                    simulatorPluginsList &&
+                                    $page.props.app.enable_simulator_plugin
+                                "
+                            >
                                 <label class="form-label">
                                     Simulator plugin
                                 </label>
@@ -418,6 +424,7 @@
                                     style="max-height: 485px"
                                     :session="session"
                                     :useCases="useCases"
+                                    :scenarios="scenarios"
                                     :isCompliance="isCompliance"
                                     v-model="form.test_cases"
                                 />
@@ -454,147 +461,154 @@
 </template>
 
 <script>
-import { serialize } from '@/utilities/object-to-formdata';
-import Layout from '@/layouts/sessions/app';
-import Environments from '@/components/environments';
-import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
-import mixinVSelect from '@/components/v-select/mixin';
-import mixinEnvs from '@/pages/sessions/mixins/environments';
-import mixinCrts from '@/pages/sessions/mixins/certificates';
+    import { serialize } from '@/utilities/object-to-formdata';
+    import Layout from '@/layouts/sessions/app';
+    import Environments from '@/components/environments';
+    import TestCaseCheckboxes from '@/components/sessions/test-case-checkboxes';
+    import mixinVSelect from '@/components/v-select/mixin';
+    import mixinEnvs from '@/pages/sessions/mixins/environments';
+    import mixinCrts from '@/pages/sessions/mixins/certificates';
 
-export default {
-    components: {
-        Layout,
-        Environments,
-        TestCaseCheckboxes,
-    },
-    props: {
-        session: {
-            type: Object,
-            required: true,
-        },
-        useCases: {
-            type: Object,
-            required: true,
-        },
+    export default {
         components: {
-            type: Object,
-            required: true,
+            Layout,
+            Environments,
+            TestCaseCheckboxes,
         },
-        hasGroupEnvironments: {
-            type: Boolean,
-            required: true,
-        },
-        hasGroupCertificates: {
-            type: Boolean,
-            required: true,
-        },
-        simulatorPlugins: {
-            type: Object,
-            required: true,
-        },
-    },
-    mixins: [mixinVSelect, mixinEnvs, mixinCrts],
-    data() {
-        return {
-            sending: false,
-            isCompliance: this.session.type === 'compliance',
-            groupsEnvs: this.session.groupEnvironment?.data ?? [],
-            groupsEnvsList: [],
-            groupCertificatesList: [],
-            simulatorPluginsList: this.simulatorPlugins.data ?? [],
-            form: {
-                name: this.session.name,
-                description: this.session.description,
-                variables: this.combineEnv(
-                    this.session.environments ?? [],
-                    this.session.fileEnvironments
-                ),
-                components: this.components.data?.map((el) => ({
-                    ...el,
-                    certificate: {
-                        serialized: null,
-                        ca_crt: null,
-                        client_crt: null,
-                        group_id: el.certificate?.group_id,
-                    },
-                    hasNonGroupCertificate:
-                        el.certificate_id && !el.certificate?.certificable_id,
-                    hasCaCertificate: el.certificate?.has_ca_crt,
-                    hasClientCertificate: el.certificate?.has_client_crt,
-                })),
-                test_cases: this.session.testCases.data?.map((el) => el.id),
-                simulatorPlugin: this.session.simulatorPlugin?.data,
+        props: {
+            session: {
+                type: Object,
+                required: true,
             },
-        };
-    },
-    mounted() {
-        this.loadGroupsEnvsList().then((result) => {
-            this.groupsEnvsList = result.data.data;
-        });
-        this.loadGroupCertificateList(this.session.id).then((result) => {
-            this.groupCertificatesList = result.data.data;
-
-            this.form.components.forEach(
-                (el) =>
-                    (el.certificate.serialized = this.groupCertificatesList?.find(
-                        (crt) => crt.id === el.certificate_id
-                    ))
-            );
-        });
-    },
-    methods: {
-        submit() {
-            const { variables, files } = this.separateEnv(this.form.variables);
-            const form = {
-                environments: variables,
-                fileEnvironments: files,
-                _method: 'PUT',
-                name: this.form.name,
-                description: this.form.description,
-                components: Object.fromEntries(
-                    this.form.components?.map((el) => [
-                        el.id,
-                        {
-                            id: el.id,
-                            base_url: el.base_url,
-                            use_encryption: el.use_encryption,
-                            certificate_id:
-                                el.certificate.serialized?.id ??
-                                (el.hasNonGroupCertificate
-                                    ? el.certificate_id
-                                    : null),
-                        },
-                    ])
-                ),
-                certificates: Object.fromEntries(
-                    this.form.components?.map((el) => {
-                        const crt = el.certificate.serialized?.id ?? {
-                            ca_crt: el.certificate.ca_crt,
-                            client_crt: el.certificate.client_crt,
-                        };
-
-                        return [el.id, crt];
-                    })
-                ),
-                test_cases: this.form.test_cases,
-                simulator_plugin_id: this.form.simulatorPlugin?.id || '',
-            };
-
-            this.sending = true;
-            this.$inertia.post(
-                route('sessions.update', this.session.id),
-                serialize(form, {
-                    indices: true,
-                    booleansAsIntegers: true,
-                }),
-                {
-                    onFinish: () => {
-                        this.sending = false;
-                    },
-                }
-            );
+            useCases: {
+                type: Object,
+                required: true,
+            },
+            scenarios: {
+                type: Object,
+                required: true,
+            },
+            components: {
+                type: Object,
+                required: true,
+            },
+            hasGroupEnvironments: {
+                type: Boolean,
+                required: true,
+            },
+            hasGroupCertificates: {
+                type: Boolean,
+                required: true,
+            },
+            simulatorPlugins: {
+                type: Object,
+                required: true,
+            },
         },
-    },
-};
+        mixins: [mixinVSelect, mixinEnvs, mixinCrts],
+        data() {
+            return {
+                sending: false,
+                isCompliance: this.session.type === 'compliance',
+                groupsEnvs: this.session.groupEnvironment?.data ?? [],
+                groupsEnvsList: [],
+                groupCertificatesList: [],
+                simulatorPluginsList: this.simulatorPlugins.data ?? [],
+                form: {
+                    name: this.session.name,
+                    description: this.session.description,
+                    variables: this.combineEnv(
+                        this.session.environments ?? [],
+                        this.session.fileEnvironments
+                    ),
+                    components: this.components.data?.map((el) => ({
+                        ...el,
+                        certificate: {
+                            serialized: null,
+                            ca_crt: null,
+                            client_crt: null,
+                            group_id: el.certificate?.group_id,
+                        },
+                        hasNonGroupCertificate:
+                            el.certificate_id &&
+                            !el.certificate?.certificable_id,
+                        hasCaCertificate: el.certificate?.has_ca_crt,
+                        hasClientCertificate: el.certificate?.has_client_crt,
+                    })),
+                    test_cases: this.session.testCases.data?.map((el) => el.id),
+                    simulatorPlugin: this.session.simulatorPlugin?.data,
+                },
+            };
+        },
+        mounted() {
+            this.loadGroupsEnvsList().then((result) => {
+                this.groupsEnvsList = result.data.data;
+            });
+            this.loadGroupCertificateList(this.session.id).then((result) => {
+                this.groupCertificatesList = result.data.data;
+
+                this.form.components.forEach(
+                    (el) =>
+                        (el.certificate.serialized = this.groupCertificatesList?.find(
+                            (crt) => crt.id === el.certificate_id
+                        ))
+                );
+            });
+        },
+        methods: {
+            submit() {
+                const { variables, files } = this.separateEnv(
+                    this.form.variables
+                );
+                const form = {
+                    environments: variables,
+                    fileEnvironments: files,
+                    _method: 'PUT',
+                    name: this.form.name,
+                    description: this.form.description,
+                    components: Object.fromEntries(
+                        this.form.components?.map((el) => [
+                            el.id,
+                            {
+                                id: el.id,
+                                base_url: el.base_url,
+                                use_encryption: el.use_encryption,
+                                certificate_id:
+                                    el.certificate.serialized?.id ??
+                                    (el.hasNonGroupCertificate
+                                        ? el.certificate_id
+                                        : null),
+                            },
+                        ])
+                    ),
+                    certificates: Object.fromEntries(
+                        this.form.components?.map((el) => {
+                            const crt = el.certificate.serialized?.id ?? {
+                                ca_crt: el.certificate.ca_crt,
+                                client_crt: el.certificate.client_crt,
+                            };
+
+                            return [el.id, crt];
+                        })
+                    ),
+                    test_cases: this.form.test_cases,
+                    simulator_plugin_id: this.form.simulatorPlugin?.id || '',
+                };
+
+                this.sending = true;
+                this.$inertia.post(
+                    route('sessions.update', this.session.id),
+                    serialize(form, {
+                        indices: true,
+                        booleansAsIntegers: true,
+                    }),
+                    {
+                        onFinish: () => {
+                            this.sending = false;
+                        },
+                    }
+                );
+            },
+        },
+    };
 </script>

@@ -442,6 +442,7 @@ Route::name('admin.')
             'ComponentController@connectionCandidates'
         )->name('components.connection-candidates');
         Route::resource('use-cases', 'UseCaseController')->except(['show']);
+        Route::resource('scenarios', 'ScenarioController')->except(['show']);
         Route::resource('implicit-suts', 'ImplicitSutController')->except([
             'show',
         ]);

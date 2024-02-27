@@ -106,6 +106,32 @@
                             </strong>
                         </span>
                     </div>
+                    <div class="col-12 mb-3">
+                        <label class="form-label">{{
+                            $t('inputs.scenario.label')
+                        }}</label>
+                        <v-select
+                            v-model="scenario"
+                            :options="$page.props.scenarios"
+                            :selectable="
+                                (option) => isSelectable(option, scenario)
+                            "
+                            label="name"
+                            :placeholder="$t('inputs.scenario.placeholder')"
+                            class="form-control d-flex p-0"
+                            :class="{
+                                'is-invalid': $page.props.errors.scenario_id,
+                            }"
+                        />
+                        <span
+                            v-if="$page.props.errors.scenario_id"
+                            class="invalid-feedback"
+                        >
+                            <strong>
+                                {{ $page.props.errors.scenario_id }}
+                            </strong>
+                        </span>
+                    </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">{{
                             $t('inputs.precondition.label')
@@ -190,65 +216,71 @@
 </template>
 
 <script>
-import Layout from '@/layouts/test-cases/main';
-import mixinVSelect from '@/components/v-select/mixin';
+    import Layout from '@/layouts/test-cases/main';
+    import mixinVSelect from '@/components/v-select/mixin';
 
-export default {
-    metaInfo() {
-        return {
-            title: `${this.testCase.name} - ${this.$t('card.title')}`,
-        };
-    },
-    components: {
-        Layout,
-    },
-    props: {
-        testCase: {
-            type: Object,
-            required: true,
-        },
-    },
-    mixins: [mixinVSelect],
-    data() {
-        return {
-            sending: false,
-            name: this.testCase.name,
-            slug: this.testCase.slug,
-            behavior: collect(this.$page.props.enums.test_case_behaviors).get(
-                this.testCase.behavior
-            ),
-            useCase: this.$page.props.useCases.filter(
-                (el) => el.name === this.testCase.useCase.data.name
-            )[0],
-            description: this.testCase.description,
-            precondition: this.testCase.precondition,
-        };
-    },
-    methods: {
-        submit() {
-            const form = {
-                name: this.name,
-                slug: this.slug,
-                behavior: collect(this.$page.props.enums.test_case_behaviors)
-                    .flip()
-                    .all()[this.behavior],
-                use_case_id: this.useCase?.id,
-                description: this.description,
-                precondition: this.precondition,
+    export default {
+        metaInfo() {
+            return {
+                title: `${this.testCase.name} - ${this.$t('card.title')}`,
             };
-
-            this.sending = true;
-            this.$inertia.put(
-                route('admin.test-cases.info.update', this.testCase.id),
-                form,
-                {
-                    onFinish: () => {
-                        this.sending = false;
-                    },
-                }
-            );
         },
-    },
-};
+        components: {
+            Layout,
+        },
+        props: {
+            testCase: {
+                type: Object,
+                required: true,
+            },
+        },
+        mixins: [mixinVSelect],
+        data() {
+            return {
+                sending: false,
+                name: this.testCase.name,
+                slug: this.testCase.slug,
+                behavior: collect(
+                    this.$page.props.enums.test_case_behaviors
+                ).get(this.testCase.behavior),
+                useCase: this.$page.props.useCases.filter(
+                    (el) => el.name === this.testCase.useCase.data.name
+                )[0],
+                scenario: this.$page.props.scenarios.filter(
+                    (el) => el.name === this.testCase.scenario.data.name
+                )[0],
+                description: this.testCase.description,
+                precondition: this.testCase.precondition,
+            };
+        },
+        methods: {
+            submit() {
+                const form = {
+                    name: this.name,
+                    slug: this.slug,
+                    behavior: collect(
+                        this.$page.props.enums.test_case_behaviors
+                    )
+                        .flip()
+                        .all()[this.behavior],
+                    use_case_id: this.useCase?.id,
+                    scenario_id: this.scenario?.id,
+                    description: this.description,
+                    precondition: this.precondition,
+                };
+
+                this.sending = true;
+                this.$inertia.put(
+                    route('admin.test-cases.info.update', this.testCase.id),
+                    form,
+                    {
+                        onFinish: () => {
+                            this.sending = false;
+                        },
+                    }
+                );
+            },
+        },
+    };
 </script>
 <i18n src="@locales/pages/admin/test-cases/info/edit.json"></i18n>

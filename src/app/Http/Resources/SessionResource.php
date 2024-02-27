@@ -54,6 +54,10 @@ class SessionResource extends JsonResource
                 ->pluck('use_case_id')
                 ->unique()
                 ->count(),
+            'scenarioCount' => $testCases
+                ->pluck('scenario_id')
+                ->unique()
+                ->count(),
             'progress' => [
                 'passed' => $testCases
                     ->map(function ($testCase) {

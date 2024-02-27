@@ -9,7 +9,9 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="mb-3">
-                                <label class="form-label"> Type of Report </label>
+                                <label class="form-label">
+                                    Type of Report
+                                </label>
                                 <label class="form-check form-switch">
                                     <input
                                         type="radio"
@@ -26,7 +28,9 @@
                                         v-model="form.type_of_report"
                                         class="form-check-input"
                                     />
-                                    <span class="form-check-label">Extended</span>
+                                    <span class="form-check-label"
+                                        >Extended</span
+                                    >
                                 </label>
                             </div>
                             <div class="mb-3">
@@ -71,51 +75,55 @@
 </template>
 
 <script>
-import { serialize } from '@/utilities/object-to-formdata';
-import Layout from '@/layouts/sessions/app';
-import testCaseRunsCheckboxes from '@/components/sessions/test-case-runs-checkboxes';
+    import { serialize } from '@/utilities/object-to-formdata';
+    import Layout from '@/layouts/sessions/app';
+    import testCaseRunsCheckboxes from '@/components/sessions/test-case-runs-checkboxes';
 
-export default {
-    components: {
-        Layout,
-        testCaseRunsCheckboxes,
-    },
-    props: {
-        session: {
-            type: Object,
-            required: true,
+    export default {
+        components: {
+            Layout,
+            testCaseRunsCheckboxes,
         },
-        useCases: {
-            type: Object,
-            required: true,
-        },
-    },
-    data() {
-        return {
-            sending: false,
-            isCompliance: this.session.type === 'compliance',
-            form: {
-                type_of_report: 'simple',
-                test_runs: [],
+        props: {
+            session: {
+                type: Object,
+                required: true,
             },
-        };
-    },
-    created() {
-        /*this.useCases.data?.forEach((useCase) =>
+            useCases: {
+                type: Object,
+                required: true,
+            },
+            scenarios: {
+                type: Object,
+                required: true,
+            },
+        },
+        data() {
+            return {
+                sending: false,
+                isCompliance: this.session.type === 'compliance',
+                form: {
+                    type_of_report: 'simple',
+                    test_runs: [],
+                },
+            };
+        },
+        created() {
+            /*this.useCases.data?.forEach((useCase) =>
             useCase.testCases?.forEach((testCase) =>
                 this.form.test_cases.push(testCase.id)
             )
         );*/
-    },
-    methods: {
-        submit() {
-            const form = {
-                _method: 'POST',
-                type_of_report: this.form.type_of_report,
-                test_runs: this.form.test_runs,
-            };
-            this.sending = true;
-            /*this.$inertia.post(
+        },
+        methods: {
+            submit() {
+                const form = {
+                    _method: 'POST',
+                    type_of_report: this.form.type_of_report,
+                    test_runs: this.form.test_runs,
+                };
+                this.sending = true;
+                /*this.$inertia.post(
                 route('sessions.report.download', this.session.id),
                 serialize(form, {
                     indices: true,
@@ -127,29 +135,44 @@ export default {
                     },
                 }
             );//*/
-            axios.post(route('sessions.report.download', this.session.id), this.form, {
-                responseType: 'blob',
-            })
-                .then(({ data, headers }) => {
-                    const url = window.URL.createObjectURL(new Blob([data], {type: headers['content-type']}));
-                    const dom = document.createElement('a');
-                    const name = headers['content-disposition'].replace(/\w+; filename=[\"]?([^"]*)[\"]?/, '$1')
-                    dom.href = url;
-                    dom.download = decodeURI(name);
-                    dom.style.display = 'none';
-                    document.body.appendChild(dom);
-                    dom.click();
-                    dom.parentNode.removeChild(dom);
-                    window.URL.revokeObjectURL(url);
-                    this.$set(this.$page.props, 'errors', {});
-                })
-                .catch(async (error) => {
-                    let data = JSON.parse(await error.response.data.text())
-                    this.$set(this.$page.props, 'errors', collect(data.errors).map(item => item.join(' ')).all())
-
-                })
-                .finally(() => this.sending = false)//*/
+                axios
+                    .post(
+                        route('sessions.report.download', this.session.id),
+                        this.form,
+                        {
+                            responseType: 'blob',
+                        }
+                    )
+                    .then(({ data, headers }) => {
+                        const url = window.URL.createObjectURL(
+                            new Blob([data], { type: headers['content-type'] })
+                        );
+                        const dom = document.createElement('a');
+                        const name = headers['content-disposition'].replace(
+                            /\w+; filename=[\"]?([^"]*)[\"]?/,
+                            '$1'
+                        );
+                        dom.href = url;
+                        dom.download = decodeURI(name);
+                        dom.style.display = 'none';
+                        document.body.appendChild(dom);
+                        dom.click();
+                        dom.parentNode.removeChild(dom);
+                        window.URL.revokeObjectURL(url);
+                        this.$set(this.$page.props, 'errors', {});
+                    })
+                    .catch(async (error) => {
+                        let data = JSON.parse(await error.response.data.text());
+                        this.$set(
+                            this.$page.props,
+                            'errors',
+                            collect(data.errors)
+                                .map((item) => item.join(' '))
+                                .all()
+                        );
+                    })
+                    .finally(() => (this.sending = false)); //*/
+            },
         },
-    },
-};
+    };
 </script>

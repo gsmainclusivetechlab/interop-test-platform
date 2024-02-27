@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Sessions\Register;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Sessions\Register\Traits\{Queries, QuestionnaireKeys};
 use App\Http\Middleware\EnsureSessionIsPresent;
-use App\Http\Resources\UseCaseResource;
+use App\Http\Resources\{UseCaseResource, ScenarioResource};
 use Illuminate\Http\{RedirectResponse, Request};
 use Inertia\Inertia;
 use Inertia\Response;

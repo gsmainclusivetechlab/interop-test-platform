@@ -13,6 +13,7 @@ use App\Models\ApiSpec;
 use App\Models\TestCase;
 use App\Models\UseCase;
 use App\Models\MessageLog;
+use App\Models\Scenario;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\ServiceProvider;
@@ -64,11 +65,14 @@ class InertiaServiceProvider extends ServiceProvider
                     )
                         ->filter()
                         ->count(),
-                    'json_pretty_max_size' => env('JSON_PRETTY_MAX_SIZE') ?? 500,
-                    'enable_simulator_plugin' => (bool)env('FEATURE_SIMULATOR_PLUGIN'),
-                    'platform_version' => !empty(env('COMMIT_TAG')) ?
-                        env('COMMIT_TAG') :
-                        env('COMMIT_HASH'),
+                    'json_pretty_max_size' =>
+                        env('JSON_PRETTY_MAX_SIZE') ?? 500,
+                    'enable_simulator_plugin' => (bool) env(
+                        'FEATURE_SIMULATOR_PLUGIN'
+                    ),
+                    'platform_version' => !empty(env('COMMIT_TAG'))
+                        ? env('COMMIT_TAG')
+                        : env('COMMIT_HASH'),
                 ];
             },
             'auth' => function () {
@@ -135,6 +139,14 @@ class InertiaServiceProvider extends ServiceProvider
                                     'create' => auth()
                                         ->user()
                                         ->can('create', UseCase::class),
+                                ],
+                                'scenarios' => [
+                                    'viewAny' => auth()
+                                        ->user()
+                                        ->can('viewAny', Scenario::class),
+                                    'create' => auth()
+                                        ->user()
+                                        ->can('create', Scenario::class),
                                 ],
                                 'test_cases' => [
                                     'viewAny' => auth()

@@ -15,6 +15,7 @@ use App\Utils\AuditLogUtil;
 use Auth;
 use App\Http\Resources\{
     ComponentResource,
+    ScenarioResource,
     SectionResource,
     SessionResource,
     SimulatorPluginResource,
@@ -27,6 +28,7 @@ use App\Models\{
     FileEnvironment,
     GroupEnvironment,
     QuestionnaireSection,
+    Scenario,
     Session,
     TestCase,
     TestRun,
@@ -133,6 +135,7 @@ class SessionController extends Controller
                     'testCases' => function ($query) use ($session) {
                         return $query->with([
                             'useCase',
+                            'scenario',
                             'lastTestRun' => function ($query) use ($session) {
                                 $query->where('session_id', $session->id);
                             },
@@ -148,6 +151,9 @@ class SessionController extends Controller
             ),
             'useCases' => UseCaseResource::collection(
                 UseCase::withTestCasesOfSession($session)->get()
+            ),
+            'scenarios' => ScenarioResource::collection(
+                Scenario::withTestCasesOfSession($session)->get()
             ),
             'testRuns' => TestRunResource::collection(
                 $session
@@ -172,6 +178,7 @@ class SessionController extends Controller
             'testCases' => function ($query) use ($session) {
                 return $query->with([
                     'useCase',
+                    'scenario',
                     'lastTestRun' => function ($query) use ($session) {
                         $query->where('session_id', $session->id);
                     },
@@ -220,7 +227,8 @@ class SessionController extends Controller
                                     $session->testCases()->pluck('id')
                                 );
                             })
-                            ->orderBy('name');
+                            ->orderBy('name')
+                            ->with(['scenario']);
                     },
                 ])
                     ->whereHas('testCases', function ($query) use ($session) {
@@ -249,6 +257,54 @@ class SessionController extends Controller
                     });
                 }
             )->exists(),
+            'scenarios' => ScenarioResource::collection(
+                Scenario::with([
+                    'testCases' => function ($query) use (
+                        $session,
+                        $sessionTestCasesIds,
+                        $sessionTestCasesGroupIds
+                    ) {
+                        $query
+                            ->where(function ($query) use (
+                                $session,
+                                $sessionTestCasesIds,
+                                $sessionTestCasesGroupIds
+                            ) {
+                                $query
+                                    ->withVersions($session)
+                                    ->available()
+                                    ->lastPerGroup(
+                                        false,
+                                        $sessionTestCasesIds,
+                                        $sessionTestCasesGroupIds
+                                    );
+                            })
+                            ->when($session->isComplianceSession(), function (
+                                $query
+                            ) use ($session) {
+                                $query->whereIn(
+                                    'id',
+                                    $session->testCases()->pluck('id')
+                                );
+                            })
+                            ->orderBy('name')
+                            ->with(['scenario']);
+                    },
+                ])
+                    ->whereHas('testCases', function ($query) use ($session) {
+                        $query
+                            ->when(
+                                !auth()
+                                    ->user()
+                                    ->can('viewAny', TestCase::class),
+                                function ($query) {
+                                    $query->where('public', true);
+                                }
+                            )
+                            ->withVersions($session);
+                    })
+                    ->get()
+            ),
             'simulatorPlugins' => SimulatorPluginResource::collection(
                 Auth::user()
                     ->groups->pluck('simulatorPlugins')
@@ -270,6 +326,9 @@ class SessionController extends Controller
             'session' => (new SessionResource($session))->resolve(),
             'useCases' => UseCaseResource::collection(
                 UseCase::WithTestCasesAndTestRunsOfSession($session)->get()
+            ),
+            'scenarios' => ScenarioResource::collection(
+                Scenario::withTestCasesAndTestRunsOfSession($session)->get()
             ),
         ]);
     }

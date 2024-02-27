@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Resources\UseCaseResource;
-use App\Models\UseCase;
+use App\Http\Resources\{ScenarioResource, UseCaseResource};
+use App\Models\{Scenario, UseCase};
 use App\Http\Controllers\Controller;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -12,14 +12,14 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class UseCaseController extends Controller
+class ScenarioController extends Controller
 {
     /**
      * @return void
      */
     public function __construct()
     {
-        $this->authorizeResource(UseCase::class, 'use_case', [
+        $this->authorizeResource(Scenario::class, 'scenario', [
             'except' => ['show'],
         ]);
     }
@@ -29,12 +29,12 @@ class UseCaseController extends Controller
      */
     public function index()
     {
-        return Inertia::render('admin/use-cases/index', [
-            'useCases' => UseCaseResource::collection(
-                UseCase::when(request('q'), function (Builder $query, $q) {
+        return Inertia::render('admin/scenarios/index', [
+            'scenarios' => ScenarioResource::collection(
+                Scenario::when(request('q'), function (Builder $query, $q) {
                     $query->where('name', 'like', "%{$q}%");
                 })
-                    ->with(['testCases', 'scenarios'])
+                    ->with(['testCases'])
                     ->latest()
                     ->paginate()
             ),
@@ -46,10 +46,16 @@ class UseCaseController extends Controller
 
     /**
      * @return Response
+     * @throws AuthorizationException
      */
     public function create()
     {
-        return Inertia::render('admin/use-cases/create');
+        $this->authorize('create', Scenario::class);
+        return Inertia::render('admin/scenarios/create', [
+            'useCases' => UseCaseResource::collection(
+                UseCase::get()
+            )->resolve(),
+        ]);
     }
 
     /**
@@ -61,54 +67,55 @@ class UseCaseController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
+            'use_case_id' => ['required', 'integer', 'exists:use_cases,id'],
         ]);
-        UseCase::create($request->input());
+        Scenario::create($request->input());
 
         return redirect()
-            ->route('admin.use-cases.index')
-            ->with('success', __('Use case created successfully'));
+            ->route('admin.scenarios.index')
+            ->with('success', __('Scenario created successfully'));
     }
 
     /**
-     * @param UseCase $useCase
+     * @param Scenario $scenario
      * @return Response
      */
-    public function edit(UseCase $useCase)
+    public function edit(Scenario $scenario)
     {
-        return Inertia::render('admin/use-cases/edit', [
-            'useCase' => (new UseCaseResource($useCase))->resolve(),
+        return Inertia::render('admin/scenarios/edit', [
+            'scenario' => (new ScenarioResource($scenario))->resolve(),
         ]);
     }
 
     /**
-     * @param UseCase $useCase
+     * @param Scenario $scenario
      * @param Request $request
      * @return RedirectResponse
      */
-    public function update(UseCase $useCase, Request $request)
+    public function update(Scenario $scenario, Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
         ]);
-        $useCase->update($request->input());
+        $scenario->update($request->input());
 
         return redirect()
-            ->route('admin.use-cases.index')
-            ->with('success', __('Use case updated successfully'));
+            ->route('admin.scenarios.index')
+            ->with('success', __('Scenario updated successfully'));
     }
 
     /**
-     * @param UseCase $useCase
+     * @param Scenario $scenario
      * @return RedirectResponse
      * @throws Exception
      */
-    public function destroy(UseCase $useCase)
+    public function destroy(Scenario $scenario)
     {
-        $useCase->delete();
+        $scenario->delete();
 
         return redirect()
             ->back()
-            ->with('success', __('Use case deleted successfully'));
+            ->with('success', __('Scenario deleted successfully'));
     }
 }

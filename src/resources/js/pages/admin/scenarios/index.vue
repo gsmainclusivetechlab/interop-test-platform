@@ -19,8 +19,8 @@
                 </form>
                 <div class="card-options">
                     <inertia-link
-                        :href="route('admin.use-cases.create')"
-                        v-if="$page.props.auth.user.can.use_cases.create"
+                        :href="route('admin.scenarios.create')"
+                        v-if="$page.props.auth.user.can.scenarios.create"
                         class="btn btn-primary"
                     >
                         <icon name="plus" />
@@ -38,9 +38,6 @@
                                 {{ $t('table.header.name') }}
                             </th>
                             <th class="text-nowrap">
-                                {{ $t('table.header.scenarios') }}
-                            </th>
-                            <th class="text-nowrap">
                                 {{ $t('table.header.test-cases') }}
                             </th>
                             <th class="text-nowrap w-1"></th>
@@ -48,14 +45,11 @@
                     </thead>
                     <tbody>
                         <tr
-                            v-for="(useCase, i) in useCases.data"
+                            v-for="(useCase, i) in scenarios.data"
                             :key="`use-case-${i}`"
                         >
                             <td class="text-break">
                                 {{ useCase.name }}
-                            </td>
-                            <td>
-                                {{ useCase.scenariosCount }}
                             </td>
                             <td>
                                 {{ useCase.testCasesCount }}
@@ -79,7 +73,7 @@
                                             class="dropdown-item"
                                             :href="
                                                 route(
-                                                    'admin.use-cases.edit',
+                                                    'admin.scenarios.edit',
                                                     useCase.id
                                                 )
                                             "
@@ -92,7 +86,7 @@
                                             class="dropdown-item"
                                             :href="
                                                 route(
-                                                    'admin.use-cases.destroy',
+                                                    'admin.scenarios.destroy',
                                                     useCase.id
                                                 )
                                             "
@@ -115,7 +109,7 @@
                                 </b-dropdown>
                             </td>
                         </tr>
-                        <tr v-if="!useCases.data.length">
+                        <tr v-if="!scenarios.data.length">
                             <td class="text-center" colspan="3">
                                 {{ $t('table.no-results') }}
                             </td>
@@ -124,8 +118,8 @@
                 </table>
             </div>
             <pagination
-                :meta="useCases.meta"
-                :links="useCases.links"
+                :meta="scenarios.meta"
+                :links="scenarios.links"
                 class="card-footer"
             />
         </div>
@@ -143,7 +137,7 @@
             Layout,
         },
         props: {
-            useCases: {
+            scenarios: {
                 type: Object,
                 required: true,
             },
@@ -161,11 +155,11 @@
         },
         methods: {
             search() {
-                this.$inertia.replace(route('admin.use-cases.index'), {
+                this.$inertia.replace(route('admin.scenarios.index'), {
                     data: this.form,
                 });
             },
         },
     };
 </script>
-<i18n src="@locales/pages/admin/use-cases/index.json"></i18n>
+<i18n src="@locales/pages/admin/scenarios/index.json"></i18n>

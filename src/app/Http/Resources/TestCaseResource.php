@@ -32,6 +32,7 @@ class TestCaseResource extends JsonResource
             'owner' => new UserResource($this->whenLoaded('owner')),
             'groups' => GroupResource::collection($this->whenLoaded('groups')),
             'useCase' => new UseCaseResource($this->whenLoaded('useCase')),
+            'scenario' => new ScenarioResource($this->whenLoaded('scenario')),
             'testSteps' => TestStepResource::collection(
                 $this->whenLoaded('testSteps')
             ),

@@ -9,6 +9,7 @@ use App\Http\Client\Response;
 use App\Models\{
     ApiSpec,
     Component,
+    Scenario,
     TestCase,
     TestScript,
     TestSetup,
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Yaml\Yaml;
+use Illuminate\Support\Facades\Log;
 
 class TestCaseImport implements Importable
 {
@@ -49,6 +51,13 @@ class TestCaseImport implements Importable
             $useCase = UseCase::firstOrCreate([
                 'name' => Arr::get($rows, 'use_case'),
             ]);
+            $scenario = Scenario::firstOrCreate([
+                'name' => Arr::get($rows, 'scenario'),
+                'use_case_id' => $useCase->getKey(),
+            ]);
+
+            $rows = Arr::add($rows, 'scenario_id', $scenario->getKey());
+
             /**
              * @var TestCase $testCase
              */
@@ -386,7 +395,10 @@ class TestCaseImport implements Importable
                         $hasErrors = true;
                         $errors .= $fileHasErrors ? '' : $fileErrorTitle;
                         $errors .= "<ol><li><b>Test step $key:</b><ul>";
-                        foreach ($testStepValidator->errors()->all() as $message) {
+                        foreach (
+                            $testStepValidator->errors()->all()
+                            as $message
+                        ) {
                             $errors .= "<li>$message</li>";
                         }
                         $errors .= '</ul></li></ol>';
@@ -405,6 +417,7 @@ class TestCaseImport implements Importable
         return [
             'name' => ['required', 'string', 'max:255'],
             'use_case' => ['required', 'string', 'max:255'],
+            'scenario' => ['required', 'string', 'max:255'],
             'behavior' => [
                 'required',
                 'string',
@@ -440,13 +453,13 @@ class TestCaseImport implements Importable
         return [
             'source' => [
                 'required',
-//                'exists:components,slug',
-                Rule::in($this->testCaseComponentsList)
+                //                'exists:components,slug',
+                Rule::in($this->testCaseComponentsList),
             ],
             'target' => [
                 'required',
-//                'exists:components,slug',
-                Rule::in($this->testCaseComponentsList)
+                //                'exists:components,slug',
+                Rule::in($this->testCaseComponentsList),
             ],
             'api_spec' => ['nullable', 'string', 'max:255'],
             'path' => ['required', 'string', 'max:255'],

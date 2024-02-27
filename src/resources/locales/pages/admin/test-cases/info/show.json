@@ -16,6 +16,9 @@
             "use-case": {
                 "label": "Use Case"
             },
+            "scenario": {
+                "label": "Scenario"
+            },
             "precondition": {
                 "label": "Precondition"
             },
