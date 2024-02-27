@@ -1,0 +1,55 @@
+name: Retrieve Transfers for a Financial Service Provider
+slug: retrieve-transfers-financial-service-provider-success
+use_case: Account Linking
+behavior: positive
+description: |
+  Requesting FSP can retrieve all transfers for a FSP via multiple requests.
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API implemented.
+  - Define the environment variables to customise this test case:
+    - `IDENTIFIER_TYPE`, default value is `accountid`
+    - `IDENTIFIER`, default value is `1`
+    - `CURRENCY`, default value is `USD`
+components:
+  - name: Requesting FSP
+    slug: rfsp
+  - name: FSP
+    slug: fsp
+test_steps:
+  ## 1 ---------- GET /accounts/{identifierType}/{identifier}/transactions: RFSP -> FSP ---------- ##
+  - path: /accounts/{identifierType}/{identifier}/transactions
+    pattern: '^accounts/([a-zA-Z]*)/([a-zA-Z0-9]*)/transactions$'
+    method: GET
+    source: rfsp
+    target: fsp
+    api_spec: MM v1.2.0
+    test_response_scripts:
+      - name: Transaction was successfully received
+        rules:
+          status: 'required|in:200'
+      - name: Response array is specified correctly with a maximun of 10 transactions
+        rules:
+          body.*: ['required', 'array', 'max:20']
+    request:
+      method: GET
+      uri: /accounts/{{ env.IDENTIFIER_TYPE | default('accountid') }}/{{ env.IDENTIFIER | default('1') }}/transactions?offset=0&limit=20
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+    response:
+      status: 200
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        - transactionReference: 'REF-0000001'
+          transactionStatus: 'completed'
+          amount: '20.00'
+          currency: 'USD'
+          type: 'transfer'
+          debitParty:
+            - key: 'msisdn'
+              value: '+4412345678'
+          creditParty:
+            - key: 'accountid'
+              value: '1'

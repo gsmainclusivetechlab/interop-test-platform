@@ -1,0 +1,51 @@
+name: Retrieval of Bills - success
+slug: retrieval-of-bills-success
+use_case: Bill Payments
+behavior: positive
+description: |
+  Mobile Money Provider can retrieve bills for a given service provider customer account.
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API implemented.
+  - Define the environment variables to customise this test case:
+    - `IDENTIFIER_TYPE`, default value is `accountid`
+    - `IDENTIFIER`, default value is `1`
+components:
+  - name: Mobile Money API Provider
+    slug: mmap
+  - name: Service Provider
+    slug: sp
+test_steps:
+  ## 1 ---------- GET /accounts/{identifierType}/{identifier}/bills: MMAP -> SP ---------- ##
+  - path: /accounts/{identifierType}/{identifier}/bills
+    pattern: '^accounts/([a-zA-Z]*)/([a-zA-Z0-9]*)/bills$'
+    method: GET
+    source: mmap
+    target: sp
+    api_spec: MM v1.2.0
+    test_response_scripts:
+      - name: Retrieval of Bills was successfully received
+        rules:
+          status: 'required|in:200'
+      - name: Response array is specified correctly with at least 1 bill object
+        rules:
+          body.*: ['required', 'array', 'min:1']
+    request:
+      method: GET
+      uri: /accounts/{{ env.IDENTIFIER_TYPE | default('accountid') }}/{{ env.IDENTIFIER | default('1') }}/bills
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+    response:
+      status: 200
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        - billReference: 'REF-0000001'
+          billStatus: 'unpaid'
+          amountDue: '50.00'
+          minimumAmountDue: '15.00'
+          currency: 'GBP'
+          dueDate: '2024-01-10'
+          creationDate: '{{ new_date_iso8601() }}'
+          modificationDate: '{{ new_date_iso8601() }}'

@@ -1,0 +1,45 @@
+name: Obtain a Financial Service Provider Balance
+slug: obtain-financial-service-provider-balance-success
+use_case: Account Linking
+behavior: positive
+description: |
+  This use case returns the balances for the specified Financial Service Provider's account.
+precondition: |
+  - Financial Service Provider has GSMA Mobile Money API Implemented.
+  - Required Parameters for Execution:
+    - IDENTIFIER_TYPE, default value is `accountid`
+    - IDENTIFIER, default value is `1`
+components:
+  - name: Requesting FSP
+    slug: rfsp
+  - name: FSP
+    slug: fsp
+test_response_scripts:
+  - name: Response request was successfully received
+    rules:
+      status: 'required|in:200'
+test_steps:
+  ## 1 ---------- GET /accounts/{identifierType}/{identifier}/balance: RFSP -> FSP ---------- ##
+  - path: /accounts/{identifierType}/{identifier}/balance
+    method: GET
+    pattern: '^accounts/([a-zA-Z]*)/[+]?[0-9]{6,15}/balance$'
+    source: rfsp
+    target: fsp
+    api_spec: MM v1.2.0
+    request:
+      method: 'GET'
+      uri: /accounts/{{ env.IDENTIFIER_TYPE | default("accountid") }}/{{ env.IDENTIFIER | default("1") }}/balance
+      headers:
+        content-type: 'application/json'
+    response:
+      status: 200
+      headers:
+        content-type: 'application/json'
+        x-date: '{{ new_date_iso8601() }}'
+      body:
+        currentBalance: '100.00'
+        availableBalance: '0.00'
+        reservedBalance: '0.00'
+        unclearedBalance: '0.00'
+        currency: 'GBP'
+        accountStatus: 'available'

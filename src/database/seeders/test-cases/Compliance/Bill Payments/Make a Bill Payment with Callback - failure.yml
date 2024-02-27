@@ -1,0 +1,100 @@
+name: Make a Bill Payment with Callback - failure
+slug: make-a-bill-payment-with-callback-failure
+use_case: Bill Payments
+behavior: negative
+description: |
+  Service Provider fails to process a bill payment request and returns an error object.
+precondition: |
+  - Mobile Money Operator has GSMA Mobile Money API implemented.
+  - Define the environment variables to customise this test case:
+    - `IDENTIFIER_TYPE`, default value is `accountid`
+    - `IDENTIFIER`, default value is `1`
+    - `BILL_REFERENCE`, default value is `REF-0000001`
+    - `CURRENCY`, default value is `GBP`
+components:
+  - name: Mobile Money API Provider
+    slug: mmap
+  - name: Service Provider
+    slug: sp
+test_steps:
+  ## 1 ---------- POST /accounts/{identifierType}/{identifier}/bills/{billReference}/payments:  MMAP -> SP ---------- ##
+  - path: /accounts/{identifierType}/{identifier}/bills/{billReference}/payments
+    pattern: '^accounts/([a-zA-Z]*)/([a-zA-Z0-9]*)/bills/([a-zA-Z0-9]*)/payments$'
+    method: POST
+    source: mmap
+    target: sp
+    api_spec: MM v1.2.0
+    trigger:
+      amountPaid: '5.40'
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.X-Callback-URL.*: 'required|url'
+      - name: Amount is specified correctly
+        rules:
+          body.amount: 'regex:/^5([.][0-9]{0,4})?$/'
+    test_response_scripts:
+      - name: Transaction was successfully Accepted
+        rules:
+          status: 'required|in:202'
+      - name: Status is specified correctly
+        rules:
+          body.status: 'required|in:pending'
+      - name: Notification Method is specified correctly
+        rules:
+          body.notificationMethod: 'required|in:callback'
+    request:
+      method: POST
+      uri: /accounts/{{ env.IDENTIFIER_TYPE | default('accountid') }}/{{ env.IDENTIFIER | default('1') }}/bills/{{ env.BILL_REFERENCE | default('REF-0000001') }}/payments
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        X-Callback-URL: '{{ mapped_urls["mmap"]["sp"] }}/callback'
+        X-Date: '{{ new_date_iso8601() }}'
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        amountPaid: '5.40'
+        currency: '{{ env.CURRENCY | default("GBP") }}'
+    response:
+      status: 202
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        serverCorrelationId: '{{ uuidv4() }}'
+        status: 'pending'
+        notificationMethod: 'callback'
+
+  ## 2 ---------- PUT /callback: MMAP -> SP ---------- ##
+  - path: '{X-Callback-URL}'
+    pattern: '.*'
+    method: PUT
+    source: sp
+    target: mmap
+    api_spec: MM v1.2.0
+    callback:
+      origin_method: POST
+      origin_path: /accounts/{identifierType}/{identifier}/bills/{billReference}/payments
+      name: billsPaymentsFailureEvent
+    test_request_scripts:
+      - name: Error category is valid
+        rules:
+          body.errorCategory: 'required|in:businessRule'
+      - name: Error code is valid
+        rules:
+          body.errorCode: 'required|in:insufficientFunds'
+    test_response_scripts:
+      - name: Transaction was successfully declined
+        rules:
+          status: 'required|in:204'
+    request:
+      method: 'PUT'
+      uri: '{{ steps.1.request.headers["x-callback-url"].0 }}'
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        errorCategory: 'businessRule'
+        errorCode: 'insufficientFunds'
+    response:
+      status: 204

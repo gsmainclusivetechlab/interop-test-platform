@@ -1,0 +1,108 @@
+name: Setup an Account Link - success
+slug: setup-account-link-success
+use_case: Account Linking
+behavior: positive
+description: |
+  The Requesting FSP initiates the request which is authorised by the account holding customer. An asynchronous flow is used with a final callback from the FSP to the Requesting FSP.
+precondition: |
+  - Financial Service Provider has GSMA Mobile Money API Implemented.
+  - Required Parameters for Execution:
+    - IDENTIFIER_TYPE, default value is `accountid`
+    - IDENTIFIER, default value is `1`
+    - SOURCE_ACCOUNT_IDENTIFIER_TYPE, default value is `accountid`
+    - SOURCE_ACCOUNT_IDENTIFIER, default value is `2999`
+    - REQUESTING_ORGANISATION_IDENTIFIER_TYPE, default value is `organisationid`
+    - REQUESTING_ORGANISATION_IDENTIFIER, default value is `12345`
+components:
+  - name: Requesting FSP
+    slug: rfsp
+  - name: FSP
+    slug: fsp
+test_steps:
+  ## 1 ---------- POST /accounts/{identifierType}/{identifier}/links: RFSP -> FSP ---------- ##
+  - path: /accounts/{identifierType}/{identifier}/links
+    method: POST
+    pattern: '^accounts/([a-zA-Z]*)/([a-zA-Z0-9]*)/links$'
+    source: rfsp
+    target: fsp
+    api_spec: MM v1.2.0
+    test_request_scripts:
+      - name: Header has the Url Callback
+        rules:
+          headers.X-Callback-URL.*: 'required|url'
+    test_response_scripts:
+      - name: Account link setup was successfully accepted
+        rules:
+          status: 'required|in:202'
+      - name: Status is specified correctly
+        rules:
+          body.status: 'required|in:pending'
+      - name: Notification Method is specified correctly
+        rules:
+          body.notificationMethod: 'required|in:callback'
+    request:
+      method: 'POST'
+      uri: /accounts/{{ env.IDENTIFIER_TYPE | default('accountid') }}/{{ env.IDENTIFIER | default('1') }}/links
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        X-Callback-URL: '{{ mapped_urls["rfsp"]["fsp"] }}/callback'
+        X-Date: '{{ new_date_iso8601() }}'
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        sourceAccountIdentifiers:
+          - key: '{{ env.SOURCE_ACCOUNT_IDENTIFIER_TYPE | default("accountid") }}'
+            value: '{{ env.SOURCE_ACCOUNT_IDENTIFIER | default("2999") }}'
+        status: 'active'
+        mode: 'both'
+        customData:
+          - keytest: 'keytest'
+            keyvalue: 'keyvalue'
+        requestingOrganisation:
+          - requestingOrganisationIdentifierType: '{{ env.REQUESTING_ORGANISATION_IDENTIFIER_TYPE | default("organisationid") }}'
+            requestingOrganisationIdentifier: '{{ env.REQUESTING_ORGANISATION_IDENTIFIER | default("12345") }}'
+    response:
+      status: 202
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        serverCorrelationId: '{{ uuidv4() }}'
+        status: 'pending'
+        notificationMethod: 'callback'
+
+  ## 2 ---------- PUt /callback: FSP -> RFSP ---------- ##
+  - path: '{X-Callback-URL}'
+    pattern: '.*'
+    method: PUT
+    source: fsp
+    target: rfsp
+    api_spec: MM v1.2.0
+    callback:
+      origin_method: POST
+      origin_path: /transactions/type/{transactionType}
+      name: linksSuccessEvent
+    test_request_scripts:
+      - name: linkReference is present
+        rules:
+          body.linkReference: 'required'
+    test_response_scripts:
+      - name: Account link setup was successfully accepted
+        rules:
+          status: 'required|in:204'
+    request:
+      method: 'PUT'
+      uri: '{{ steps.1.request.headers["X-Callback-URL"].0 }}'
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        '{{ steps.1.request.body
+        | merge(
+          {
+            "linkReference": "REF-0000001"
+          }
+        )
+        | json_encode }}'
+    response:
+      status: 204

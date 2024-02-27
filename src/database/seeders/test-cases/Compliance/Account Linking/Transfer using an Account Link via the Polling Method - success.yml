@@ -1,0 +1,164 @@
+name: Transfer using an Account Link via the Polling Method
+slug: transfer-using-account-link-polling-success
+use_case: Account Linking
+behavior: positive
+description: |
+  Requesting Financial Service Provider submits a transfer request to the Financial Service Provider. The Requesting Financial Service Provider polls the Financial Service Provider until the request is authorised or declined or the polling limit has been reached. The Requesting Financial Service Provider requests the specific transaction using the transaction reference returned in the request state and the transaction object is sent back to the Requesting Finaicial Service Provider.
+precondition: |
+  - Financial Service Provider has GSMA Mobile Money API Implemented.
+  - Required Parameters for Execution:
+    - Amount should be the value `13.50`.
+  - Define the envrionment variables to customise this test case:
+    - `CURRENCY`, default value is `USD`
+    - `DEBIT_PARTY_KEY`, default value is `accountid`
+    - `DEBIT_PARTY_VALUE`, default value is `1`
+    - `CREDIT_PARTY_KEY`, default value is `msisdn`
+    - `CREDIT_PARTY_VALUE`, default value is `+4412345678`
+components:
+  - name: Requesting FSP
+    slug: rfsp
+  - name: FSP
+    slug: fsp
+test_steps:
+  ## 1 ---------- POST /transactions/type/transfer: RFSP -> FSP ---------- ##
+  - path: /transactions/type/{transactionType}
+    pattern: '^transactions/type/transfer$'
+    method: POST
+    source: rfsp
+    target: fsp
+    api_spec: MM v1.2.0
+    trigger:
+      amount: '13.50'
+    test_request_scripts:
+      - name: Amount is specified correctly
+        rules:
+          body.amount: 'regex:/^13([.][0-9]{0,4})?$/'
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:202'
+      - name: Status is specified correctly
+        rules:
+          body.status: 'required|in:pending'
+      - name: Notification Method is specified correctly
+        rules:
+          body.notificationMethod: 'required|in:polling'
+    request:
+      method: POST
+      uri: /transactions/type/transfer
+      headers:
+        Accept: 'application/json'
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+        X-CorrelationID: '{{ uuidv4() }}'
+      body:
+        amount: '13.50'
+        currency: '{{ env.CURRENCY | default("USD")}}'
+        debitParty:
+          - key: '{{ env.DEBIT_PARTY_KEY | default("accountid") }}'
+            value: '{{ env.DEBIT_PARTY_VALUE | default("1") }}'
+        creditParty:
+          - key: '{{ env.CREDIT_PARTY_KEY | default("msisdn") }}'
+            value: '{{ env.CREDIT_PARTY_VALUE|default("+334412345678") }}'
+    response:
+      status: 202
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        serverCorrelationId: '{{ uuidv4() }}'
+        status: 'pending'
+        notificationMethod: 'polling'
+
+  ## 2 ---------- GET /requeststates: RFSP -> FSP ---------- ##
+  - path: /requeststates/{serverCorrelationId}
+    pattern: '^requeststates/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+    method: GET
+    source: rfsp
+    target: fsp
+    api_spec: MM v1.2.0
+    test_response_scripts:
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:200'
+      - name: Transaction was completed
+        rules:
+          body.status: 'required|in:completed'
+    request:
+      method: 'GET'
+      uri: '/requeststates/{{ steps.1.response.body.serverCorrelationId }}'
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+    response:
+      status: 200
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        serverCorrelationId: '{{ steps.1.response.body.serverCorrelationId }}'
+        status: 'completed'
+        objectReference: '{{ uuidv4() }}'
+        notificationMethod: 'polling'
+    repeat:
+      condition:
+        body:
+          status: 'pending'
+      max: 4
+      count: 2
+      response:
+        status: 200
+        body:
+          serverCorrelationId: '{{ steps.1.response.body.serverCorrelationId }}'
+          status: 'pending'
+          pollLimit: 4
+          notificationMethod: 'polling'
+      test_response_scripts:
+        - name: Request was received and it is pending
+          rules:
+            body.status: 'required|in:pending'
+            status: 'required|in:200'
+
+  ## 3 ---------- GET /transactions/{transactionReference}: RFSP -> FSP ---------- ##
+  - path: /transactions/{transactionReference}
+    pattern: '^transactions/^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$'
+    method: GET
+    source: rfsp
+    target: fsp
+    api_spec: MM v1.2.0
+    trigger:
+      amount: '13.50'
+    test_response_scripts:
+      - name: Amount is specified correctly
+        rules:
+          body.amount: 'regex:/^13([.][0-9]{0,4})?$/'
+      - name: Transaction is a Transfer
+        rules:
+          body.type: 'required|in:transfer'
+      - name: Transaction was approved
+        rules:
+          body.transactionStatus: 'required|in:completed'
+      - name: Transaction was successfully accepted
+        rules:
+          status: 'required|in:200'
+    request:
+      method: 'GET'
+      uri: 'transactions/{{ steps.2.response.body.objectReference }}'
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+    response:
+      status: 200
+      headers:
+        Content-Type: 'application/json'
+        X-Date: '{{ new_date_iso8601() }}'
+      body:
+        '{{ steps.1.request.body
+        | merge(
+          {
+            type: "transfer",
+            transactionStatus: "completed",
+            transactionReference: steps.2.response.body.objectReference
+          }
+        )
+        | json_encode }}'
